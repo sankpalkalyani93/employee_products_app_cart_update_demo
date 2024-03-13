@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Employee Detail</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Department</th>
+            <th>Position</th>
+        </tr>
+    </thead>
+    <tbody>
+            <tr>
+                <td>{{ employees.first_name }}</a></td>
+                <td>{{ employees.last_name }}</td>
+                <td>{{ employees.department.dname | upper }}</td>
+                <td>{{ employees.position.title }}</td>
+            </tr>
+
+    </tbody>
+</table>
+{% endblock %}

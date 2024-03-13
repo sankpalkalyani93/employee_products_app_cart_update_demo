@@ -1,0 +1,8 @@
+{% block content %}
+<h2>Employee list</h2>
+<ul>
+    {% for employee in employees %}
+    <li>{{ employee.first_name}} : {{ employee.last_name }} : {{ employee.position }} - {{ employee.department }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}

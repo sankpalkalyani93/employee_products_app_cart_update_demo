@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Main Page{% endblock %}
+
+{% block content %}
+
+    <!-- Navbar -->
+    {% include 'nav.html' %}
+
+    <!-- Search Results -->
+    <h1>Search Results</h1>
+    <p>Showing search results for: <strong>{{ query }}</strong></p>
+
+    {% if results %}
+        <ul>
+            {% for employee in results %}
+                <li>{{ employee.first_name }} {{ employee.last_name }}</li>
+                <!-- You can display any other information about the employee here -->
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+{% endblock %}

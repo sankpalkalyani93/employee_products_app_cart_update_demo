@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Positions{% endblock %}
+
+{% block content %}
+    <h1>Position List</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>No. </th>
+                <th>Position Title</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for position in positions %}
+                <tr class="{% cycle 'odd' 'even' %}">
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ position.title }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

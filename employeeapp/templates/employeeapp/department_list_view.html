@@ -1,0 +1,23 @@
+{% extends 'base.html' %} 
+
+{% block title %}Departments{% endblock %}
+
+{% block content %}
+    <h1>Department List</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>No. </th>
+                <th>Department Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for department in departments %}
+                <tr class="{% cycle 'odd' 'even' %}">
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ department.dname }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

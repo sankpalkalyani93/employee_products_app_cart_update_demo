@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Employees{% endblock %}
+{% block content %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>No. </th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Department</th>
+                <th>Position</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employee in employees %}
+                <tr class="{% cycle 'odd' 'even' %}">
+                    <td>{{ forloop.counter }}</td>
+                    <td><a href="{% url 'employee_detail_view' employee.pk %}">{{ employee.first_name }}</a></td>
+                    <td>{{ employee.last_name }}</td>
+                    <td>{{ employee.department.dname | upper }}</td>
+                    <td>{{ employee.position.title }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Main Page{% endblock %}
+
+{% block content %}
+
+        <!--<h1>Welcome to Employee Management System</h1>
+        {% include 'employeeapp/employee_list_view.html' with employees=employees %}
+        {% include 'employeeapp/department_list_view.html' with departments=departments %}
+        {% include 'employeeapp/position_list_view.html' with positions=positions %} -->
+        <h2>Employees</h2>
+        {% include 'employeeapp/employee_list_view.html' with employees=employees %}
+        <a href="{{ employee_list_view_url }}">View all employees</a>
+    
+        <h2>Departments</h2>
+        {% include 'employeeapp/department_list_view.html' with departments=departments %}
+        <a href="{{ department_list_view_url }}">View all departments</a>
+    
+        <h2>Positions</h2>
+        {% include 'employeeapp/position_list_view.html' with positions=positions %}
+        <a href="{{ position_list_view_url }}">View all positions</a>
+      
+{% endblock %}
