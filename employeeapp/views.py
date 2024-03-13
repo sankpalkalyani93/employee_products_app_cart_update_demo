@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic import ListView
 from .models import Department, Position, Employee
+from django.db.models import Q
 
 # Create your views here.
 def home(request):
@@ -27,9 +28,26 @@ def main_template(request):
     })
 
 def search_results(request):
+    #query = request.GET.get('q')
+    #results = Employee.objects.filter(first_name__icontains=query)  # Assuming Employee is your model
+    #return render(request, 'search_results.html', {'query': query, 'results': results})
     query = request.GET.get('q')
-    results = Employee.objects.filter(first_name__icontains=query)  # Assuming Employee is your model
-    return render(request, 'search_results.html', {'query': query, 'results': results})
+
+    employee_results = None
+    department_results = None
+
+    if query:
+        employee_results = Employee.objects.filter(
+            Q(first_name__icontains=query) |
+            Q(last_name__icontains=query) |
+            Q(department__dname__icontains=query)
+        ).distinct()
+
+        department_results = Department.objects.filter(
+            Q(dname__icontains=query)
+        ).distinct()
+
+    return render(request, 'search_results.html', {'employee_results': employee_results, 'department_results': department_results, 'query': query})
 
 def employee_detail_view(request, employee_id):
     employees = Employee.objects.get(pk = employee_id)

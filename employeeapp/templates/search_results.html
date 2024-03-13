@@ -1,24 +1,32 @@
-{% extends 'base.html' %}
+{% extends 'base.html'%}
+{% load static %}
 
-{% block title %}Main Page{% endblock %}
+{% block title %}Search Results{% endblock %}
 
 {% block content %}
+{% if query %}
+    <p>Search results for: <strong>{{ query }}</strong></p>
+{% endif %}
 
-    <!-- Navbar -->
-    {% include 'nav.html' %}
+{% if employee_results %}
+    <h3>Employees</h3>
+    <ul>
+        {% for employee in employee_results %}
+            <li>{{ employee.first_name }} {{ employee.last_name }} - {{ employee.department.dname }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
 
-    <!-- Search Results -->
-    <h1>Search Results</h1>
-    <p>Showing search results for: <strong>{{ query }}</strong></p>
+{% if department_results %}
+    <h3>Departments</h3>
+    <ul>
+        {% for department in department_results %}
+            <li>{{ department.dname }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
 
-    {% if results %}
-        <ul>
-            {% for employee in results %}
-                <li>{{ employee.first_name }} {{ employee.last_name }}</li>
-                <!-- You can display any other information about the employee here -->
-            {% endfor %}
-        </ul>
-    {% else %}
+{% if not employee_results and not department_results %}
         <p>No results found.</p>
-    {% endif %}
+{% endif %}
 {% endblock %}
