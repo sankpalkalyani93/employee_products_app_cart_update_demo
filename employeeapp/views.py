@@ -1,12 +1,18 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.generic import ListView
-from .models import Department, Position, Employee
+from django.contrib.auth import login, logout, authenticate
+from django.contrib import messages
+from employeeapp.forms import ProductsForm
+from .models import Department, Position, Employee, Products
 from django.db.models import Q
 
 # Create your views here.
 def home(request):
-    return render(request, 'employeeapp/home.html')
+    request.session['my_data'] = 'Hello, Session!'
+    my_data = request.session.get('my_data', 'Default value if not found')
+    username = request.session.get('username')
+    return render(request, 'employeeapp/home.html', {'my_data': my_data, 'username': username})
 
 def main_template(request):
     employees = Employee.objects.all()
@@ -67,3 +73,35 @@ class EmployeeListView(ListView):
     model = Employee
     template_name = 'employeeapp/employee_list_view.html'
     context_object_name = 'employees'
+
+def create_product(request):
+    if request.method == 'POST':
+        form = ProductsForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('products_list')
+    else:
+        form = ProductsForm()
+    return render(request, 'employeeapp/create_product.html', {'form': form})
+    
+def products_list(request):
+    products = Products.objects.all()
+    return render(request, 'employeeapp/products_list.html', {'products': products})
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            request.session['username'] = username
+            return redirect('home')
+        else:
+            messages.error(request, "Invalid username or password")        
+    return render(request, 'login.html')
+
+def logout_view(request):
+    logout(request)
+    #messages.info(request, 'Logout successful.')
+    return render(request, 'logout.html')
