@@ -6,6 +6,8 @@ from django.contrib import messages
 from employeeapp.forms import ProductsForm
 from .models import Department, Position, Employee, Products
 from django.db.models import Q
+from PIL import Image
+from io import BytesIO
 
 # Create your views here.
 def home(request):
@@ -76,17 +78,37 @@ class EmployeeListView(ListView):
 
 def create_product(request):
     if request.method == 'POST':
-        form = ProductsForm(request.POST)
+        form = ProductsForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            product = form.save(commit=False)  # Get the product instance without saving to the database yet
+
+            # Resize the uploaded image before saving
+            if product.image:
+                img = Image.open(product.image)
+                if img.mode == 'RGBA':
+                    img = img.convert('RGB')
+                img.thumbnail((300, 300))
+                
+                # Save the resized image back to the product instance
+                output_io = BytesIO()
+                img.save(output_io, format='JPEG', quality=100)
+                product.image.save(product.image.name, output_io)
+
+            # Save the product instance to the database
+            product.save()
             return redirect('products_list')
     else:
         form = ProductsForm()
+    
     return render(request, 'employeeapp/create_product.html', {'form': form})
     
 def products_list(request):
     products = Products.objects.all()
     return render(request, 'employeeapp/products_list.html', {'products': products})
+
+def product_detail_view(request, id):
+    product = Products.objects.get(id=id)
+    return render(request, 'employeeapp/product_detail_view.html', {'product': product})
 
 def login_view(request):
     if request.method == 'POST':

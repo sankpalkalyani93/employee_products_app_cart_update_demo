@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Product Detail</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Image</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+            <tr>
+                <td>{{ product.name }}</a></td>
+                <td>{{ product.description }}</td>
+                <td>{% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    {% else %}
+                    <p>No image available</p>
+                    {% endif %}</td>
+                <td>{{ product.price }}</td>
+            </tr>
+
+    </tbody>
+</table>
+{% endblock %}
