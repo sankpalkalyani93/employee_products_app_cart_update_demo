@@ -3,8 +3,8 @@ from django.urls import reverse
 from django.views.generic import ListView
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
-from employeeapp.forms import ProductsForm
-from .models import Department, Position, Employee, Products
+from employeeapp.forms import ProductsForm, AddToCartForm
+from .models import Department, Position, Employee, Products, Cart
 from django.db.models import Q
 from PIL import Image
 from io import BytesIO
@@ -109,6 +109,38 @@ def products_list(request):
 def product_detail_view(request, id):
     product = Products.objects.get(id=id)
     return render(request, 'employeeapp/product_detail_view.html', {'product': product})
+
+def add_to_cart(request, id):
+    product = Products.objects.get(pk=id)
+    if request.method == 'POST':
+        form = AddToCartForm(request.POST)
+        if form.is_valid():
+            quantity = form.cleaned_data['quantity']
+            user = request.user
+            cart_item, created = Cart.objects.get_or_create(user=user, product=product)
+            
+            if not created:
+                cart_item.quantity += 1  # Increment quantity if item already exists in cart
+                cart_item.save()
+            else:
+                cart_item.quantity = quantity
+                cart_item.save()
+            return redirect('cart_view')
+    else:
+        form = AddToCartForm()
+
+    return render(request, 'add_to_cart.html', {'form': form, 'product': product})
+
+def cart_view(request):
+    cart_items = Cart.objects.filter(user=request.user)
+    total_price = sum(item.product.price * item.quantity for item in cart_items)
+    
+    return render(request, 'cart_view.html', {'cart_items': cart_items, 'total_price': total_price})
+
+def remove_from_cart(request, id):
+    cart_item = Cart.objects.get(pk=id)
+    cart_item.delete()
+    return redirect('cart_view')
 
 def login_view(request):
     if request.method == 'POST':

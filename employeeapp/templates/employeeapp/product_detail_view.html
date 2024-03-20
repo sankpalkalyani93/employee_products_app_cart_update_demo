@@ -20,6 +20,13 @@
                     <p>No image available</p>
                     {% endif %}</td>
                 <td>{{ product.price }}</td>
+                <td>
+                    <form action="{% url 'add_to_cart' product.id %}" method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit">Add to Cart</button>
+                    </form>
+                </td>
             </tr>
 
     </tbody>
