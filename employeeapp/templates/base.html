@@ -31,7 +31,7 @@
                     <li class="nav-item"><a class="nav-link" href="{% url 'department_list_view' %}">Departments</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'position_list_view' %}">Positions</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'products_list' %}">Products</a></li>
-                    
+                    <li class="nav-item"><a class="nav-link" href="{% url 'cart_view' %}"><i class="fas fa-shopping-cart"></i></a></li>           
                 </ul>
                 <form class="navbar-form navbar-search ms-auto" action="{% url 'search_results' %}" method="get">
                     <input class="form-control me-2" type="search" name="q" placeholder="Search">
